@@ -235,16 +235,13 @@ def find_interesting(base_ea):
             print("[+] Identified as a SecureROM image")
 
 def accept_file(fd, fname):
-    print("accept_file => "+str(format))
     version = 0
     ret = 0
     if type(fname) == str:
         fd.seek(0x280)
         ver_str = fd.read(0x20)
-        print(ver_str)
         if ver_str[:5].decode() == "iBoot":
             version = ver_str[6:] # for later
-            print(version)
             ret = {"format" : "iBoot (AArch64)", "processor" : "arm"}
     return ret
 
