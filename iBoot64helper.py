@@ -10,6 +10,7 @@ import ida_funcs
 import ida_segment
 import ida_name
 import ida_bytes
+import ida_funcs
 import struct
 
 true = True
@@ -19,11 +20,10 @@ none = None
 prologues = ["BD A9", "BF A9", "7F 23 03 D5"]
 
 def find_panic(base_ea):
-    pk_ea = ida_search.find_text(base_ea, 1, 1, "double panic in ", ida_search.SEARCH_DOWN)
-    
+    pk_ea = ida_search.find_text(base_ea, 1, 1, "double panic in ", ida_search.SEARCH_NEXT)
     if pk_ea != idaapi.BADADDR:
         for xref in idautils.XrefsTo(pk_ea):
-            func = idaapi.get_func(xref.frm)
+            func = ida_funcs.get_func(xref.frm)
             print("\t[+] _panic = 0x%x" % (func.start_ea))
             ida_name.set_name(func.start_ea, "_panic")
             return func.start_ea
@@ -57,11 +57,11 @@ def find_img4decodeinit(base_ea):
     return idaapi.BADADDR
 
 def find_aes_crypto_cmd(base_ea):
-    aes_ea = ida_search.find_text(base_ea, 1, 1, "aes_crypto_cmd", ida_search.SEARCH_DOWN)
+    aes_ea = ida_search.find_text(base_ea, 1, 1, "aes_crypto_cmd", ida_search.SEARCH_NEXT)
 
     if aes_ea != idaapi.BADADDR:
         for xref in idautils.XrefsTo(aes_ea):
-            func = idaapi.get_func(xref.frm)
+            func = ida_funcs.get_func(xref.frm)
             print("\t[+] _aes_crypto_cmd = 0x%x" % (func.start_ea))
             ida_name.set_name(func.start_ea, "_aes_crypto_cmd")
             return func.start_ea
@@ -69,11 +69,11 @@ def find_aes_crypto_cmd(base_ea):
     return idaapi.BADADDR
 
 def find_update_device_tree(base_ea):
-    udt_ea = ida_search.find_text(base_ea, 1, 1, "development-cert", ida_search.SEARCH_DOWN)
+    udt_ea = ida_search.find_text(base_ea, 1, 1, "development-cert", ida_search.SEARCH_NEXT)
 
     if udt_ea != idaapi.BADADDR:
         for xref in idautils.XrefsTo(udt_ea):
-            func = idaapi.get_func(xref.frm)
+            func = ida_funcs.get_func(xref.frm)
             print("\t[+] _UpdateDeviceTree = 0x%x" % (func.start_ea))
             ida_name.set_name(func.start_ea, "_UpdateDeviceTree")
             return func.start_ea
@@ -117,11 +117,11 @@ def find_load_kernelcache(ea):
     return idaapi.BADADDR
 
 def find_do_go(base_ea):
-    str_ea = ida_search.find_text(base_ea, 1, 1, "Memory image not valid", ida_search.SEARCH_DOWN)
+    str_ea = ida_search.find_text(base_ea, 1, 1, "Memory image not valid", ida_search.SEARCH_NEXT)
 
     if str_ea != idaapi.BADADDR:
         for xref in idautils.XrefsTo(str_ea):
-            func = idaapi.get_func(xref.frm)
+            func = ida_funcs.get_func(xref.frm)
             print("\t[+] _do_go = 0x%x" % (func.start_ea))
             ida_name.set_name(func.start_ea, "_do_go")
             return func.start_ea
@@ -129,11 +129,11 @@ def find_do_go(base_ea):
     return idaapi.BADADDR
 
 def find_pmgr_binning_mode_get_value(base_ea):
-    str_ea = ida_search.find_text(base_ea, 1, 1, "Invalid low", ida_search.SEARCH_DOWN)
+    str_ea = ida_search.find_text(base_ea, 1, 1, "Invalid low", ida_search.SEARCH_NEXT)
 
     if str_ea != idaapi.BADADDR:
         for xref in idautils.XrefsTo(str_ea):
-            func = idaapi.get_func(xref.frm)
+            func = ida_funcs.get_func(xref.frm)
             print("\t[+] _pmgr_binning_mode_get_value = 0x%x" % (func.start_ea))
             ida_name.set_name(func.start_ea, "_pmgr_binning_mode_get_value")
             return func.start_ea
@@ -141,11 +141,11 @@ def find_pmgr_binning_mode_get_value(base_ea):
     return idaapi.BADADDR
 
 def find_do_printf(base_ea):
-    str_ea = ida_search.find_text(base_ea, 1, 1, "<ptr>", ida_search.SEARCH_DOWN)
+    str_ea = ida_search.find_text(base_ea, 1, 1, "<ptr>", ida_search.SEARCH_NEXT)
 
     if str_ea != idaapi.BADADDR:
         for xref in idautils.XrefsTo(str_ea):
-            func = idaapi.get_func(xref.frm)
+            func = ida_funcs.get_func(xref.frm)
             print("\t[+] _do_printf = 0x%x" % (func.start_ea))
             ida_name.set_name(func.start_ea, "_do_printf")
             return func.start_ea
@@ -196,9 +196,9 @@ def find_macho_load(base_ea):
         if len(list(idautils.XrefsTo(pz_ea))) != 3:
             return idaapi.BADADDR
 
-        func1_ea = idaapi.get_func(list(idautils.XrefsTo(pz_ea))[0].frm).start_ea
-        func2_ea = idaapi.get_func(list(idautils.XrefsTo(pz_ea))[1].frm).start_ea
-        func3_ea = idaapi.get_func(list(idautils.XrefsTo(pz_ea))[2].frm).start_ea
+        func1_ea = ida_funcs.get_func(list(idautils.XrefsTo(pz_ea))[0].frm).start_ea
+        func2_ea = ida_funcs.get_func(list(idautils.XrefsTo(pz_ea))[1].frm).start_ea
+        func3_ea = ida_funcs.get_func(list(idautils.XrefsTo(pz_ea))[2].frm).start_ea
 
         if func2_ea != func3_ea:
             return idaapi.BADADDR
@@ -292,7 +292,7 @@ def load_file(fd, neflags, format):
 
     for prologue in prologues:
         while ea != idc.BADADDR:
-            ea = idc.find_binary(ea, idc.SEARCH_DOWN, prologue, 16)
+            ea = idc.find_binary(ea, idc.ida_search.SEARCH_DOWN, prologue, 16)
             if ea != idc.BADADDR:
                 ea = ea - 2
                 if (ea % 4) == 0 and ida_bytes.get_flags(ea) < 0x200:
