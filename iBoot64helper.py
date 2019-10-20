@@ -162,14 +162,14 @@ def find_putchar(base_ea):
             return idaapi.BADADDR
 
         opnd0 = idc.print_operand(apanic_ea + 8, 0)
-        ins_str = idc.GetMnem(apanic_ea + 8)
+        ins_str = idaapi.ua_mnem(apanic_ea + 8)
 
         if ins_str == "BL":
             func_ea = ida_name.get_name_ea(idaapi.BADADDR,opnd0)
             ea = func_ea
 
             while ea != idaapi.BADADDR:
-                ins_str = idc.GetMnem(ea)
+                ins_str = idaapi.ua_mnem(ea)
                 
                 if ins_str == "ADD":
                     opnd2 = idc.print_operand(ea, 2)
@@ -177,7 +177,7 @@ def find_putchar(base_ea):
                     if opnd2 == "#1":
                         ins_ea = ea - 4
                         opnd0 = idc.print_operand(ins_ea, 0)
-                        ins_str = idc.GetMnem(ins_ea)
+                        ins_str = idaapi.ua_mnem(ins_ea)
 
                         if ins_str == "BL":
                             pc_ea = ida_name.get_name_ea(idaapi.BADADDR,opnd0)
